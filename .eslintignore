@@ -1,0 +1,9 @@
+lib/**
+static/**
+coverage
+node_modules/**
+dist/**
+jest.config.js
+.eslintrc.js
+tests/*.js
+jestConfig.unit.js

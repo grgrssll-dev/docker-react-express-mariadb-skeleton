@@ -1,0 +1,7 @@
+{
+    "exec": "ts-node -r tsconfig-paths/register --project ./tsconfig.json --files --transpile-only",
+    "ext": "js json ts tsx html",
+    "verbose": false,
+    "watch": ["src/server", "src/shared", "src/@types"]
+  }
+  

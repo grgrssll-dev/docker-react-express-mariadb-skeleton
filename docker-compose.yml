@@ -1,0 +1,64 @@
+version: "3"
+
+secrets:
+  db_password:
+    file: ./secrets/db_password
+  db_root_password:
+    file: ./secrets/db_root_password
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    command: --init-file /data/application/initialize_database.sql
+    environment:
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql/initialize_database.sql:/data/application/initialize_database.sql
+    networks:
+      - app
+    secrets:
+      - db_password
+      - db_root_password
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.backend.dev
+    restart: unless-stopped
+    ports:
+      - "5500:5000"
+    env_file:
+      - "./.env"
+    volumes:
+      - server_data:/usr/src/app
+    depends_on:
+      - db
+    networks:
+      - app
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.frontend.dev
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - app_data:/usr/src/app/build
+    networks:
+      - app
+
+volumes:
+  db_data:
+  app_data:
+  server_data:
+
+
+networks:
+  app:
+    driver: bridge
