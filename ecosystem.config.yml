@@ -1,5 +1,0 @@
-apps:
-  - script: npm run start:prod
-    name: map-quiz
-    env:
-      NODE_ENV: production
